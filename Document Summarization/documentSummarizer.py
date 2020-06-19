@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Sat Apr  4 15:12:55 2020
-
-@author: yashd
-"""
-
 #importing libraries
 from nltk.corpus import stopwords
 from nltk.stem import PorterStemmer
@@ -12,25 +5,7 @@ from nltk.tokenize import word_tokenize, sent_tokenize
 import bs4 as BeautifulSoup
 import urllib.request  
 
-#fetching the content from the URL
-fetched_data = urllib.request.urlopen('https://en.wikipedia.org/wiki/Artificial_intelligence')
-
-article_read = fetched_data.read()
-
-#parsing the URL content and storing in a variable
-article_parsed = BeautifulSoup.BeautifulSoup(article_read,'html.parser')
-
-#returning <p> tags
-paragraphs = article_parsed.find_all('p')
-
-article_content = ''
-
-#looping through the paragraphs and adding them to the variable
-for p in paragraphs:  
-    article_content += p.text
-
-
-def _create_dictionary_table(text_string) -> dict:
+def _create_dictionary_table(text_string):
    
     #removing stop words
     stop_words = set(stopwords.words("english"))
@@ -54,7 +29,7 @@ def _create_dictionary_table(text_string) -> dict:
     return frequency_table
 
 
-def _calculate_sentence_scores(sentences, frequency_table) -> dict:   
+def _calculate_sentence_scores(sentences, frequency_table):   
 
     #algorithm for scoring a sentence by its words
     sentence_weight = dict()
@@ -76,7 +51,7 @@ def _calculate_sentence_scores(sentences, frequency_table) -> dict:
 
     return sentence_weight
 
-def _calculate_average_score(sentence_weight) -> int:
+def _calculate_average_score(sentence_weight):
    
     #calculating the average score for the sentences
     sum_values = 0
@@ -119,6 +94,25 @@ def _run_article_summary(article):
     return article_summary
 
 if __name__ == '__main__':
+    #fetching the content from the URL
+    #https://en.wikipedia.org/wiki/Artificial_intelligence
+    docUrl = input('Enter the full URL of the document you wish to summarize: ')
+    fetched_data = urllib.request.urlopen(docUrl)
+    
+    article_read = fetched_data.read()
+    
+    #parsing the URL content and storing in a variable
+    article_parsed = BeautifulSoup.BeautifulSoup(article_read,'html.parser')
+    
+    #returning <p> tags
+    paragraphs = article_parsed.find_all('p')
+    
+    article_content = ''
+    
+    #looping through the paragraphs and adding them to the variable
+    for p in paragraphs:  
+        article_content += p.text
 
     summary_results = _run_article_summary(article_content)
+    print('\nSummary for the artcle taken from the url: {} :-'.format(docUrl))
     print(summary_results)
